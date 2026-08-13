@@ -32,7 +32,6 @@ app.get("/", async (req, res) => {
   res.render("index.ejs");
 });
 
-
 app.use("/auth", authController);
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);

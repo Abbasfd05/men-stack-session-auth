@@ -32,5 +32,32 @@ router.post("/sign-up", async (req, res) => {
     res.status(500).send("Error signing up.");
   }
 });
+router.get("/sign-in", (req, res) => {
+    
+  res.render("auth/sign-in.ejs");
+});
+router.post("/sign-in", async (req, res) => {
+  try {
+    // 1. Find the user by username
+    const userInDatabase = await User.findOne({ username: req.body.username });
+    if (!userInDatabase) {
+      return res.send("Login failed. Please try again.");
+    }
 
+    // 2. Compare submitted password to the hashed password in the database
+    const validPassword = bcrypt.compareSync(
+      req.body.password,
+      userInDatabase.password
+    );
+    if (!validPassword) {
+      return res.send("Login failed. Please try again.");
+    }
+
+    // 3. Success
+    res.send(`Thanks for signing in ${userInDatabase.username}`);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error signing in.");
+  }
+});
 module.exports = router;
