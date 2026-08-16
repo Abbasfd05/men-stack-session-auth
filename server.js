@@ -33,7 +33,7 @@ app.use(morgan('dev'));
 app.get('/', async (req, res) => {
   res.render('index.ejs');
 });
-
+//save
 app.get('/auth/sign-up', authCtrl.signup);
 app.post('/auth/sign-up', authCtrl.register);
 app.get('/auth/sign-in', authCtrl.signin);
