@@ -6,18 +6,20 @@
     <title>Home Page</title>
   </head>
   <body>
-    <% if (user) { %>
-<h1>Welcome to the app, <%= user.username %>!</h1>
-<a href="/auth/logout">Log out</a>
-<br>
-<a href="/vip-lounge">Get into the VIP Users Only lounge!</a>
-<% } else { %>
-<h1>Welcome to the app, guest.</h1>
-<p>
-  <a href="/auth/sign-up">Sign up</a> 
-  <a href="/auth/sign-in">sign in</a>.
-</p>
-<p><a href="/vip-lounge">Get into the VIP Users Only lounge!</a></p>
-<% } %>
+
+    <% if(user){ %>
+      <h1>Welcome to the app, <%= user.username %>!</h1>
+      <p>
+        <a href="/auth/sign-out">Log out</a>
+        <p><a href="/vip-lounge">Get into the VIP Users Only lounge!</a></p>
+      </p>
+    <% }else{ %>
+      <h1>Welcome to the app!</h1>
+      <a href="/auth/sign-up">Register</a>
+      <a href="/auth/sign-in">Login</a>
+       <p><a href="/vip-lounge">Get into the VIP Users Only lounge!</a></p>
+    <%}%>
+
+
   </body>
 </html>
