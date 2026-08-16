@@ -1,10 +1,12 @@
-
+/* eslint-disable prefer-destructuring */
 const dotenv = require('dotenv');
 
 dotenv.config();
 const express = require('express');
 
 const app = express();
+
+const MongoStore=require('connect-mongo').MongoStore;
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
@@ -22,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
 });
+const isSignedIn = require("./middleware/is-signed-in.js");
 
 // Middleware to parse URL-encoded data from forms
 app.use(express.urlencoded({ extended: false }));
@@ -35,19 +38,29 @@ app.use(
     resave: false,
     saveUninitialized: true,
   })
-); //now we have to modify the request to create a session, because middleware is all about the req modifying. 
+);
+
+
+//Protected ROUTE
+app.get("/vip-lounge", isSignedIn, (req, res) => {
+  res.send(`Welcome to the party ${req.session.user.username}.`);
+});
 
 // PUBLIC ROUTES
 app.get('/', async (req, res) => {
-  res.render('index.ejs');
+  const user = req.session.user;
+
+  res.render('index.ejs', { user });
 });
-//save
+
 app.get('/auth/sign-up', authCtrl.signup);
 app.post('/auth/sign-up', authCtrl.register);
 app.get('/auth/sign-in', authCtrl.signin);
 app.post('/auth/sign-in', authCtrl.login);
 
 // PRIVATE ROUTES
+app.get('/auth/logout' , authCtrl.signout);
+
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
