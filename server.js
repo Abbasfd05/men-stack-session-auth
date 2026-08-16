@@ -1,10 +1,11 @@
+
 const dotenv = require('dotenv');
 
 dotenv.config();
 const express = require('express');
 
 const app = express();
-
+const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const morgan = require('morgan');
@@ -28,6 +29,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 // Morgan for logging HTTP requests
 app.use(morgan('dev'));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+); //now we have to modify the request to create a session, because middleware is all about the req modifying. 
 
 // PUBLIC ROUTES
 app.get('/', async (req, res) => {

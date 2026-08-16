@@ -59,5 +59,11 @@ router.post("/sign-in", async (req, res) => {
     console.log(error);
     res.status(500).send("Error signing in.");
   }
+    req.session.user = {
+    username: userInDatabase.username,
+    _id: userInDatabase._id
+  };
+
+  res.redirect("/");
 });
 module.exports = router;
